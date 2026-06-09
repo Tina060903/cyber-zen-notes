@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Zen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&family=JetBrains+Mono:wght@200;300;400&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&family=JetBrains+Mono:wght@200;300;400&display=swap" /></noscript>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- Loading -->
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    <p data-i18n="loading.text">Loading Cyber Zen</p>
+  </div>
+
+  <!-- Lang toggle -->
+  <button id="lang-toggle">EN</button>
+
+  <!-- Top Right Icon (Notes) -->
+  <div id="notes-trigger" class="top-right-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>
+  </div>
+
+  <!-- Top Left Icon -->
+  <div id="top-left-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/></svg>
+  </div>
+
+  <!-- BG Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ===== MODE SWITCHER ===== -->
+  <div id="top-trigger"></div>
+  <div id="mode-switcher">
+    <button class="mode-btn active" data-mode="rain" data-i18n="mode.rain">Rain</button>
+    <span class="separator-dot">·</span>
+    <button class="mode-btn" data-mode="snow" data-i18n="mode.snow">Snow</button>
+    <span class="separator-dot">·</span>
+    <button class="mode-btn" data-mode="star" data-i18n="mode.star">Star</button>
+    <span class="separator-dot">·</span>
+    <button class="mode-btn" data-mode="none" data-i18n="mode.none">None</button>
+  </div>
+
+  <!-- ===== EDITOR ===== -->
+  <div id="editor-container">
+    <div id="editor-toolbar">
+      <div class="font-selector">
+        <div class="font-option active" data-font="sans"><span class="font-label">Sans</span><span class="font-preview">Aa</span></div>
+        <div class="font-option" data-font="serif"><span class="font-label">Serif</span><span class="font-preview" style="font-family:'Playfair Display',serif">Aa</span></div>
+        <div class="font-option" data-font="mono"><span class="font-label">Mono</span><span class="font-preview" style="font-family:'JetBrains Mono',monospace">Aa</span></div>
+      </div>
+      <div class="size-selector">
+        <button class="size-btn" data-size="small">S</button>
+        <button class="size-btn active" data-size="medium">M</button>
+        <button class="size-btn" data-size="large">L</button>
+      </div>
+      <span class="toolbar-divider"></span>
+      <button class="ql-bold" data-i18n="toolbar.bold">B</button>
+      <button class="ql-italic" data-i18n="toolbar.italic">I</button>
+      <button class="ql-underline" data-i18n="toolbar.underline">U</button>
+      <button class="ql-align left" value="left" data-i18n="toolbar.alignLeft">≡</button>
+      <button class="ql-align center" value="center" data-i18n="toolbar.alignCenter">≡</button>
+      <button class="ql-align right" value="right" data-i18n="toolbar.alignRight">≡</button>
+      <span class="toolbar-divider"></span>
+      <button id="save-local-btn">Save</button>
+    </div>
+    <div id="editor">
+      <p data-i18n="editor.placeholder">Start writing in the cyber zen...</p>
+    </div>
+    <div id="export-container">
+      <button id="export-btn" data-i18n="export.btn">Export</button>
+      <div id="export-dropdown">
+        <button class="export-option" data-format="txt" data-i18n="export.txt">.txt</button>
+        <button class="export-option" data-format="docx" data-i18n="export.docx">.docx</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VIBE MIXER (Floating) ===== -->
+  <div id="vibe-mixer-trigger-zone"></div>
+  <div id="vibe-mixer">
+    <div id="vibe-mixer-inner">
+      <div class="mixer-section">
+        <div class="mixer-section-title" data-i18n="mixer.environment">Atmosphere</div>
+        <div class="mixer-label"><span data-i18n="mixer.rain">Rain</span><span class="mixer-value" id="rain-val">0.5</span></div>
+        <input type="range" id="rain-slider" min="0" max="1" step="0.01" value="0.5" />
+        <div class="mixer-label"><span data-i18n="mixer.blur">Blur</span><span class="mixer-value" id="blur-val">0.5</span></div>
+        <input type="range" id="blur-slider" min="0" max="1" step="0.01" value="0.5" />
+        <div class="mixer-label"><span data-i18n="mixer.opacity">Fade</span><span class="mixer-value" id="opacity-val">1.0</span></div>
+        <input type="range" id="opacity-slider" min="0.1" max="1" step="0.01" value="1.0" />
+        <div class="mixer-label"><span data-i18n="mixer.snow">Snow</span><span class="mixer-value" id="snow-val">0.5</span></div>
+        <input type="range" id="snow-slider" min="0" max="1" step="0.01" value="0.5" />
+      </div>
+      <div class="mixer-section">
+        <div class="mixer-section-title" data-i18n="mixer.audio">Audio</div>
+        <div class="mixer-label"><span data-i18n="mixer.rainSound">White Noise</span><span class="mixer-value" id="rain-sound-val">0</span></div>
+        <div class="mixer-slider-row"><input type="range" id="rain-sound-slider" min="0" max="1" step="0.01" value="0" /><input type="number" class="vol-input" id="rain-sound-num" min="0" max="100" value="0" /></div>
+        <div class="mixer-label"><span data-i18n="mixer.bgmVol">Music</span><span class="mixer-value" id="bgm-vol-val">0.7</span></div>
+        <div class="mixer-slider-row"><input type="range" id="bgm-vol-slider" min="0" max="1" step="0.01" value="0.7" /><input type="number" class="vol-input" id="bgm-vol-num" min="0" max="100" value="70" /></div>
+      </div>
+      <div class="mixer-section">
+        <div class="mixer-section-title" data-i18n="mixer.musicPlayer">Player</div>
+        <div id="bgm-playlist">
+          <div class="bgm-track" data-track="builtin-rain"><span class="track-icon">🌧</span><span class="track-name" data-i18n="track.rain">Rain</span><span class="track-status"></span></div>
+          <div class="bgm-track" data-track="builtin-forest"><span class="track-icon">🌲</span><span class="track-name" data-i18n="track.forest">Forest</span><span class="track-status"></span></div>
+          <div class="bgm-track" data-track="builtin-ocean"><span class="track-icon">🌊</span><span class="track-name" data-i18n="track.ocean">Ocean</span><span class="track-status"></span></div>
+          <div class="bgm-track" data-track="builtin-wind"><span class="track-icon">🍃</span><span class="track-name" data-i18n="track.wind">Wind</span><span class="track-status"></span></div>
+        </div>
+        <div id="bgm-uploaded-list"></div>
+        <button class="mixer-btn" id="bgm-upload-btn" data-i18n="mixer.uploadAudio">Upload</button>
+        <input type="file" id="bgm-file-input" accept="audio/*" style="display:none" />
+      </div>
+      <div class="mixer-section">
+        <div class="mixer-section-title" data-i18n="mixer.bgImage">Image</div>
+        <button class="mixer-btn" id="bg-upload-btn" data-i18n="mixer.uploadImage">Upload</button>
+        <input type="file" id="bg-file-input" accept="image/*" style="display:none" />
+        <button class="mixer-btn" id="bg-remove-btn" style="display:none" data-i18n="mixer.removeImage">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FILE MANAGER (Floating) ===== -->
+  <div id="fm-trigger-zone"></div>
+  <div id="file-manager">
+    <div id="file-manager-inner">
+      <div id="fm-header">
+        <h3 data-i18n="fm.title">History</h3>
+        <button id="fm-new-btn">+</button>
+      </div>
+      <div id="note-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== ZEN TIMER ===== -->
+  <div id="zen-timer">
+    <div id="mixer-trigger" class="circular-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders-horizontal"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg>
+    </div>
+    <svg id="timer-progress-ring" viewBox="0 0 64 64">
+      <circle class="bg-ring" cx="32" cy="32" r="24" />
+      <circle class="fg-ring" cx="32" cy="32" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8" />
+    </svg>
+    <div class="timer-controls">
+      <button class="timer-btn" id="timer-mode-toggle">◯</button>
+      <div id="timer-display">25:00</div>
+      <input type="number" id="timer-input" value="25" min="1" max="120" placeholder="25" style="display:none" />
+      <button class="timer-btn start" id="timer-toggle">▶</button>
+      <button class="timer-btn" id="timer-reset">↺</button>
+    </div>
+  </div>
+
+  <!-- ===== STATUS INFO ===== -->
+  <div id="status-info">
+    <div class="status-text">FlowSpace v1.0</div>
+    <div class="status-text" id="current-mode-status">Rainy Mode</div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

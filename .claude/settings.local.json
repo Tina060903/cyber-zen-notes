@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3000/src/main.js)",
+      "Bash(curl -s http://localhost:3000/src/style.css)",
+      "Bash(node -e \"const Quill = require\\('quill'\\); console.log\\(Object.keys\\(Quill\\).slice\\(0,20\\)\\); console.log\\(typeof Quill.import\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{time_total}s\" http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/)",
+      "WebFetch(domain:flow-space-v1.vercel.app)",
+      "Bash(bash ~/.claude/skills/web-access/scripts/check-deps.sh)",
+      "Bash(curl -s \"http://localhost:3456/new?url=http://xhslink.com/o/35gLvvPTBIh\")",
+      "Bash(curl -s -X POST \"http://localhost:3456/eval?target=3B34607E950B069CF8AE84D1BB556D89\" -d 'document.title')",
+      "Bash(curl -s \"http://localhost:3456/screenshot?target=3B34607E950B069CF8AE84D1BB556D89&file=/tmp/xhs-note.png\")",
+      "Bash(curl -s -X POST http://localhost:3456/eval?target=3B34607E950B069CF8AE84D1BB556D89 -d ' *)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s \"http://localhost:3456/scroll?target=3B34607E950B069CF8AE84D1BB556D89&y=1000\")",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:global.v2ex.co)",
+      "Bash(curl -s \"http://localhost:3456/new?url=https://flow-space-v1.vercel.app/\")",
+      "Bash(curl -s -X POST \"http://localhost:3456/eval?target=F27C3D46B03A92034C8DE4F5BB946525\" -d 'document.title')",
+      "Bash(python3)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)"
+    ]
+  }
+}

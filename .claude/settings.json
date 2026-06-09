@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pkill -f \"vite\")",
+      "Bash(npx vite *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} - %{time_total}s\\\\n\" http://localhost:3000/)"
+    ]
+  }
+}
