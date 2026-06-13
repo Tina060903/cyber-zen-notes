@@ -23,7 +23,14 @@
       "Bash(curl -s -X POST \"http://localhost:3456/eval?target=F27C3D46B03A92034C8DE4F5BB946525\" -d 'document.title')",
       "Bash(python3)",
       "Bash(pkill -f \"vite\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git restore *)"
     ]
   }
 }

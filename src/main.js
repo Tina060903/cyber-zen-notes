@@ -8,6 +8,7 @@ import { ZenTimer } from './components/ZenTimer.js';
 import { FileManager } from './components/FileManager.js';
 import { exportTxt, exportDocx } from './utils/export.js';
 import { loadNote, getAllNotesSummary, generateNoteId, saveNote } from './utils/storage.js';
+import * as mammoth from 'mammoth';
 import { initI18n, setLanguage, getLanguage, t } from './utils/i18n.js';
 
 // --- Initialize i18n ---
@@ -232,6 +233,47 @@ if (saveBtn) {
   });
   document.addEventListener('click', (e) => {
     if (menuEl && e.target !== saveBtn) closeSaveMenu();
+  });
+}
+
+// --- File Upload (TXT / DOCX / TEX) ---
+const uploadBtn = document.getElementById('upload-btn');
+const fileInput = document.getElementById('file-input');
+if (uploadBtn && fileInput) {
+  uploadBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const name = file.name;
+    const ext = name.split('.').pop().toLowerCase();
+    try {
+      let content = '';
+      if (ext === 'docx') {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+        content = result.value;
+        if (result.messages.length > 0) {
+          console.warn('mammoth warnings:', result.messages);
+        }
+      } else if (ext === 'txt' || ext === 'tex') {
+        content = await file.text();
+        content = content.replace(/\n/g, '<br>');
+      } else {
+        showToast('❌ Unsupported file type');
+        return;
+      }
+      // Wrap in paragraph if not HTML
+      if (!content.startsWith('<')) {
+        content = `<p>${content}</p>`;
+      }
+      editor.setContent(content);
+      fileManager.autoSave();
+      showToast(`✅ Loaded: ${name}`);
+    } catch (err) {
+      console.error('File load failed:', err);
+      showToast('❌ Failed to load file');
+    }
+    fileInput.value = '';
   });
 }
 

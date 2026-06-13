@@ -280,20 +280,19 @@ html, body {
 }
 #editor-toolbar button:hover, #editor-toolbar button.ql-active { color: #fff; }
 
-#save-local-btn {
+#save-local-btn, #upload-btn {
   background: var(--bg-glass);
   border: 1px solid var(--border-glass);
   color: var(--text-secondary);
   font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   padding: 8px 16px;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s;
   white-space: nowrap;
 }
-#save-local-btn:hover {
+#save-local-btn:hover, #upload-btn:hover {
   background: rgba(255,255,255,0.08);
   border-color: rgba(255,255,255,0.2);
   color: #fff;
