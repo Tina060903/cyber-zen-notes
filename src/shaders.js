@@ -219,10 +219,14 @@ void main() {
   vec2 bgUv = coverUv(uv, uResolution);
   vec3 col = blur2D_snow(uTexture1, bgUv, uResolution, uBlur);
 
-  // Snow effect (Shadertoy inspired)
+  // Snow effect (Shadertoy inspired) — density controlled by uSnowAmount
   float snow = 0.0;
   float gradient = (1.0 - uv.y) * 0.4;
   float random = fract(sin(dot(uv * uResolution, vec2(12.9898, 78.233))) * 43758.5453);
+
+  // uSnowAmount: 0 → minimal, 0.5 → current default, 1 → max density
+  float densityThreshold = 0.001 + uSnowAmount * 0.159; // range 0.001–0.160
+  float intensityScale = 0.2 + uSnowAmount * 0.8;       // range 0.2–1.0
 
   for(int k = 0; k < 6; k++) {
     for(int i = 0; i < 12; i++) {
@@ -242,14 +246,14 @@ void main() {
       float d = 5.0 * distance((uvStep.xy + vec2(x * sin(y), y) * randomMagnitude1 + vec2(y, x) * randomMagnitude2), snowUv.xy);
 
       float omiVal = fract(sin(dot(uvStep.xy, vec2(32.4691, 94.615))) * 31572.1684);
-      if(omiVal < 0.08) {
+      if(omiVal < densityThreshold) {
         float newd = (x + 1.0) * 0.4 * clamp(1.9 - d * (15.0 + (x * 6.3)) * (cellSize / 1.4), 0.0, 1.0);
         snow += newd;
       }
     }
   }
 
-  col += snow;
+  col += snow * intensityScale;
   col += gradient * vec3(0.4, 0.8, 1.0);
   col += random * 0.01;
 
