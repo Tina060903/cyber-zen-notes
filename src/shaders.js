@@ -44,6 +44,23 @@ vec2 coverUv(vec2 uv, vec2 res) {
   return (uv - 0.5) * scale * 0.9 + 0.5;
 }
 
+vec3 blur2D(sampler2D tex, vec2 uv, vec2 res, float amount) {
+  if (amount < 0.005) return texture2D(tex, uv).rgb;
+  vec2 texel = 1.0 / res;
+  float radius = amount * 6.0;
+  vec3 color = vec3(0.0);
+  float total = 0.0;
+  for (int x = -2; x <= 2; x++) {
+    for (int y = -2; y <= 2; y++) {
+      vec2 off = vec2(float(x), float(y)) * texel * radius;
+      float w = exp(-float(x * x + y * y) * 0.3);
+      color += texture2D(tex, uv + off).rgb * w;
+      total += w;
+    }
+  }
+  return color / total;
+}
+
 #define S(a, b, t) smoothstep(a, b, t)
 
 vec3 N13(float p) {
@@ -136,7 +153,7 @@ void main() {
     vec2 n = vec2(cx-c.x, cy-c.x);
 
     vec2 bgUv = coverUv(UV + n, uResolution);
-    vec3 col = texture2D(uTexture1, bgUv).rgb;
+    vec3 col = blur2D(uTexture1, bgUv, uResolution, uBlur);
     
     // Simple color correction & Vignette
     col *= mix(vec3(0.9, 0.95, 1.0), vec3(1.0), uOpacity);
@@ -180,10 +197,27 @@ vec2 coverUv(vec2 uv, vec2 res) {
   return (uv - 0.5) * scale + 0.5;
 }
 
+vec3 blur2D_snow(sampler2D tex, vec2 uv, vec2 res, float amount) {
+  if (amount < 0.005) return texture2D(tex, uv).rgb;
+  vec2 texel = 1.0 / res;
+  float radius = amount * 6.0;
+  vec3 color = vec3(0.0);
+  float total = 0.0;
+  for (int x = -2; x <= 2; x++) {
+    for (int y = -2; y <= 2; y++) {
+      vec2 off = vec2(float(x), float(y)) * texel * radius;
+      float w = exp(-float(x * x + y * y) * 0.3);
+      color += texture2D(tex, uv + off).rgb * w;
+      total += w;
+    }
+  }
+  return color / total;
+}
+
 void main() {
   vec2 uv = vUv;
   vec2 bgUv = coverUv(uv, uResolution);
-  vec3 col = texture2D(uTexture1, bgUv).rgb;
+  vec3 col = blur2D_snow(uTexture1, bgUv, uResolution, uBlur);
 
   // Snow effect (Shadertoy inspired)
   float snow = 0.0;
@@ -257,6 +291,23 @@ vec2 coverUv(vec2 uv, vec2 res) {
   return (uv - 0.5) * scale + 0.5;
 }
 
+vec3 blur2D_star(sampler2D tex, vec2 uv, vec2 res, float amount) {
+  if (amount < 0.005) return texture2D(tex, uv).rgb;
+  vec2 texel = 1.0 / res;
+  float radius = amount * 6.0;
+  vec3 color = vec3(0.0);
+  float total = 0.0;
+  for (int x = -2; x <= 2; x++) {
+    for (int y = -2; y <= 2; y++) {
+      vec2 off = vec2(float(x), float(y)) * texel * radius;
+      float w = exp(-float(x * x + y * y) * 0.3);
+      color += texture2D(tex, uv + off).rgb * w;
+      total += w;
+    }
+  }
+  return color / total;
+}
+
 // Return random noise in the range [0.0, 1.0], as a function of x.
 float Noise2d(vec2 x) {
   float xhash = cos(x.x * 37.0);
@@ -294,7 +345,7 @@ float StableStarField(vec2 vSamplePos, float fThreshhold) {
 void main() {
   vec2 uv = vUv;
   vec2 bgUv = coverUv(uv, uResolution);
-  vec3 col = texture2D(uTexture1, bgUv).rgb;
+  vec3 col = blur2D_star(uTexture1, bgUv, uResolution, uBlur);
 
   // Sky overlay gradient
   vec3 skyColor = vec3(0.1, 0.2, 0.4) * uv.y;
@@ -349,10 +400,27 @@ vec2 coverUv(vec2 uv, vec2 res) {
   return (uv - 0.5) * scale + 0.5;
 }
 
+vec3 blur2D_pure(sampler2D tex, vec2 uv, vec2 res, float amount) {
+  if (amount < 0.005) return texture2D(tex, uv).rgb;
+  vec2 texel = 1.0 / res;
+  float radius = amount * 6.0;
+  vec3 color = vec3(0.0);
+  float total = 0.0;
+  for (int x = -2; x <= 2; x++) {
+    for (int y = -2; y <= 2; y++) {
+      vec2 off = vec2(float(x), float(y)) * texel * radius;
+      float w = exp(-float(x * x + y * y) * 0.3);
+      color += texture2D(tex, uv + off).rgb * w;
+      total += w;
+    }
+  }
+  return color / total;
+}
+
 void main() {
   vec2 uv = vUv;
   vec2 bgUv = coverUv(uv, uResolution);
-  vec3 col = texture2D(uTexture1, bgUv).rgb;
+  vec3 col = blur2D_pure(uTexture1, bgUv, uResolution, uBlur);
   col *= uOpacity;
   col = max(col, vec3(0.08));
   gl_FragColor = vec4(col, 1.0);
