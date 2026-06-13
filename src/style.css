@@ -282,6 +282,8 @@ html, body {
 
 #save-local-btn, #upload-btn {
   background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border-glass);
   color: var(--text-secondary);
   font-size: 11px;
