@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/cyber-zen-notes/',
+  base: process.env.GITHUB_ACTIONS ? '/cyber-zen-notes/' : '/',
   server: {
     port: 3000,
     open: true
