@@ -100,9 +100,8 @@ html, body {
   left: 32px;
   z-index: 100;
   padding: 12px;
-  background: var(--bg-glass-heavy);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border-glass);
   border-radius: 50%;
   color: var(--text-muted);
@@ -283,8 +282,6 @@ html, body {
 
 #save-local-btn, #upload-btn {
   background: var(--bg-glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border-glass);
   color: var(--text-secondary);
   font-size: 11px;
